@@ -1,0 +1,79 @@
+#+title: 📘 Magik Emacs Configuration
+#+author: Robin Putters
+#+email: robin.putters@keronic.com
+#+language: en
+
+This guide helps you set up a *Magik development environment* in Emacs.  
+It walks you through installing required packages and enabling =magik-mode=.
+
+* ⚙️ Exporting the Configuration
+
+If you’re viewing this file in Emacs, you can export it into a usable configuration with:
+
+- Press ~C-c C-v t~, or  
+- Run the following in Emacs:
+
+#+BEGIN_SRC emacs-lisp :tangle no :results none
+(org-babel-tangle)
+#+END_SRC
+
+The generated files should be placed in your Emacs configuration directory:  
+
+- *Default location:* =~/.emacs.d/=  
+- *Alternative:* wherever your =user-emacs-directory= points to
+
+* 📦 Package Management in Emacs
+
+Emacs includes a built-in package manager, similar to:
+
+- =npm= (Node.js)  
+- =pip= (Python)  
+- =Maven= (Java)  
+
+By default, it uses the GNU ELPA archive.  
+For a broader selection—including the *Magik package*, we add *MELPA*.
+
+#+BEGIN_SRC emacs-lisp :tangle early-init.el
+  ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Packages.html
+  (with-eval-after-load 'package
+    (add-to-list 'package-archives
+      `("melpa" . ,(format "http%s://stable.melpa.org/packages/"
+                          (if (gnutls-available-p) "s" "")))))
+#+END_SRC
+
+* 🔧 Setting Up =use-package=
+
+We’ll use the [[https://www.gnu.org/software/emacs/manual/html_node/use-package/][use-package]] macro to install and configure packages.  
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  ;; https://www.gnu.org/software/emacs/manual/html_node/use-package/
+  (use-package use-package
+    :ensure t
+    :after (package)
+    :custom
+    (use-package-defer t)
+    (use-package-always-ensure t)
+    (use-package-compute-statistics t)
+    (use-package-vc-prefer-newest t)
+    (use-package-verbose t))
+#+END_SRC
+
+* ✨ Installing Magik Mode
+
+Finally, enable the *Magik mode* package:
+
+#+BEGIN_SRC emacs-lisp :tangle init.el
+  ;; https://github.com/roadrunner1776/magik
+  (use-package magik-mode
+    :config
+    (magik-global-bindings)
+    (magik-menu-set-menus))
+#+END_SRC
+
+* ✅ Summary
+
+1. Enable *MELPA* as a package source.  
+2. Install and configure packages using *=use-package=*.  
+3. Enable *Magik mode* for development.  
+
+You’re now ready to work with *Magik in Emacs* 🎉
